@@ -1,9 +1,13 @@
 import { Negotiation } from "../models/negotiation.js";
+import { Negotiations } from "../models/negotiations.js";
 
+/* Na arquitetura MVC, a camada Controller é responsvel por intermediar
+  o acesso entre a View e a Model */
 export class NegociacaoController {
   private dateInput: HTMLInputElement;
   private quantityInput: HTMLInputElement;
   private valueInput: HTMLInputElement;
+  private negotiations: Negotiations = new Negotiations()
 
   constructor(){
     this.dateInput = document.querySelector('#data');
@@ -12,7 +16,9 @@ export class NegociacaoController {
   }
 
   adds() {
-    this.createsNegotiation();
+    const negotiation = this.createsNegotiation();
+    this.negotiations.adds(negotiation);
+    this.clearEntries();
   }
   
   createsNegotiation(): Negotiation {
@@ -28,7 +34,7 @@ export class NegociacaoController {
     this.quantityInput.value = '';
     this.valueInput.value = '';
     // Moves focus to the date field
-    this.dateInput.focus;
+    this.dateInput.focus();
   }
 
 }
