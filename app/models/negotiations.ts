@@ -5,6 +5,7 @@ export class Negotiations {
 
   adds(negotiation:Negotiation): void {
     this.negotiationsList.push(negotiation);
+    
   }
 
   list(): readonly Negotiation[] {
