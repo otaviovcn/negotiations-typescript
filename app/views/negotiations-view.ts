@@ -1,3 +1,6 @@
+import { Negotiation } from "../models/negotiation.js";
+import { Negotiations } from "../models/negotiations.js";
+
 export class NegotiationsView {
   private element: HTMLElement;
 
@@ -5,7 +8,7 @@ export class NegotiationsView {
     this.element = document.querySelector(selector);
   }
 
-  template(): string {
+  template(model:Negotiations): string {
     return `
       <table class="table table-hover table-bordered">
         <thead>
@@ -16,12 +19,25 @@ export class NegotiationsView {
           </tr>
         </thead>
         <tbody>
+          ${model.list().map((negotiation) => {
+            return `
+              <tr>
+                <td>${new Intl.DateTimeFormat().format(negotiation.date)}</td>
+                <td>${negotiation.quantity}</td>
+                <td>${negotiation.value}</td>
+              </tr>
+            `
+          })}
         </tbody>
       </table>
     `;
   }
 
-  update(): void {
-    this.element.innerHTML = this.template();    
+  getData(negotiation: Negotiation): string {
+    return "";
+  }
+
+  update(model: Negotiations): void {
+    this.element.innerHTML = this.template(model);    
   }
 }
