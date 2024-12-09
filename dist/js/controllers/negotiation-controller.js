@@ -19,7 +19,7 @@ export class NegociacaoController {
         this.negotiations.adds(negotiation);
         // this.negotiationsView.template();
         this.negotiationsView.update(this.negotiations);
-        this.messageView.update("Mensagem aqui");
+        this.messageView.update(`${this.negotiations.list().length}ª Negociação adicionada`);
         this.clearEntries();
     }
     createsNegotiation() {
