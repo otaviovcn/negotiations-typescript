@@ -1,3 +1,4 @@
+import { WeekDays } from "../enums/week-days.js";
 import { Negotiation } from "../models/negotiation.js";
 import { Negotiations } from "../models/negotiations.js";
 import { MessageView } from "../views/message-view.js";
@@ -9,6 +10,8 @@ export class NegociacaoController {
         this.negotiations = new Negotiations();
         this.negotiationsView = new NegotiationsView("#negotiationsView");
         this.messageView = new MessageView("#messageView");
+        this.SUNDAY = 0;
+        this.SATURDAY = 6;
         this.dateInput = document.querySelector('#data');
         this.quantityInput = document.querySelector('#quantidade');
         this.valueInput = document.querySelector('#valor');
@@ -16,11 +19,17 @@ export class NegociacaoController {
     }
     adds() {
         const negotiation = this.createsNegotiation();
-        this.negotiations.adds(negotiation);
-        // this.negotiationsView.template();
-        this.negotiationsView.update(this.negotiations);
-        this.messageView.update(`${this.negotiations.list().length}ª Negociação adicionada`);
-        this.clearEntries();
+        if (this.isBusinessDay(negotiation.date)) {
+            this.negotiations.adds(negotiation);
+            this.updateView();
+            this.clearEntries();
+        }
+        else {
+            this.messageView.update('Apenas negociações em dias úteis são aceitas.');
+        }
+    }
+    isBusinessDay(date) {
+        return date.getDay() > WeekDays.SUNDAY && date.getDay() < WeekDays.SATURDAY;
     }
     createsNegotiation() {
         const exp = /-/g;
@@ -35,5 +44,9 @@ export class NegociacaoController {
         this.valueInput.value = '';
         // Moves focus to the date field
         this.dateInput.focus();
+    }
+    updateView() {
+        this.negotiationsView.update(this.negotiations);
+        this.messageView.update(`${this.negotiations.list().length}ª Negociação adicionada`);
     }
 }
