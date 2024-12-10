@@ -11,10 +11,8 @@ export class NegociacaoController {
   private quantityInput: HTMLInputElement;
   private valueInput: HTMLInputElement;
   private negotiations: Negotiations = new Negotiations();
-  private negotiationsView: NegotiationsView = new NegotiationsView("#negotiationsView");
+  private negotiationsView: NegotiationsView = new NegotiationsView("#negotiationsView", true);
   private messageView: MessageView = new MessageView("#messageView");
-  private readonly SUNDAY: number = 0;
-  private readonly SATURDAY: number = 6;
 
   constructor() {
     this.dateInput = document.querySelector('#data');
@@ -24,7 +22,12 @@ export class NegociacaoController {
   }
 
   public adds(): void {
-    const negotiation = this.createsNegotiation();
+    const negotiation = Negotiation.createsNegotiation(
+      this.dateInput.value,
+      this.quantityInput.value,
+      this.valueInput.value
+    );
+
     if (this.isBusinessDay(negotiation.date)) {
       this.negotiations.adds(negotiation);
       this.updateView();
@@ -36,14 +39,6 @@ export class NegociacaoController {
 
   private isBusinessDay(date: Date):boolean {
     return date.getDay() > WeekDays.SUNDAY && date.getDay() < WeekDays.SATURDAY
-  }
-
-  private createsNegotiation(): Negotiation {
-    const exp = /-/g;
-    const date = new Date(this.dateInput.value.replace(exp, ','));
-    const quantity = parseInt(this.quantityInput.value);
-    const value = parseFloat(this.valueInput.value);
-    return new Negotiation(date, quantity, value);
   }
 
   private clearEntries(): void {

@@ -10,4 +10,11 @@ export class Negotiation {
     get date() {
         return new Date(this._date.getTime());
     }
+    static createsNegotiation(dateInput, quantityInput, valueInput) {
+        const exp = /-/g;
+        const date = new Date(dateInput.replace(exp, ','));
+        const quantity = parseInt(quantityInput);
+        const value = parseFloat(valueInput);
+        return new Negotiation(date, quantity, value);
+    }
 }

@@ -8,17 +8,15 @@ import { NegotiationsView } from "../views/negotiations-view.js";
 export class NegociacaoController {
     constructor() {
         this.negotiations = new Negotiations();
-        this.negotiationsView = new NegotiationsView("#negotiationsView");
+        this.negotiationsView = new NegotiationsView("#negotiationsView", true);
         this.messageView = new MessageView("#messageView");
-        this.SUNDAY = 0;
-        this.SATURDAY = 6;
         this.dateInput = document.querySelector('#data');
         this.quantityInput = document.querySelector('#quantidade');
         this.valueInput = document.querySelector('#valor');
         this.negotiationsView.update(this.negotiations);
     }
     adds() {
-        const negotiation = this.createsNegotiation();
+        const negotiation = Negotiation.createsNegotiation(this.dateInput.value, this.quantityInput.value, this.valueInput.value);
         if (this.isBusinessDay(negotiation.date)) {
             this.negotiations.adds(negotiation);
             this.updateView();
@@ -30,13 +28,6 @@ export class NegociacaoController {
     }
     isBusinessDay(date) {
         return date.getDay() > WeekDays.SUNDAY && date.getDay() < WeekDays.SATURDAY;
-    }
-    createsNegotiation() {
-        const exp = /-/g;
-        const date = new Date(this.dateInput.value.replace(exp, ','));
-        const quantity = parseInt(this.quantityInput.value);
-        const value = parseFloat(this.valueInput.value);
-        return new Negotiation(date, quantity, value);
     }
     clearEntries() {
         this.dateInput.value = '';
