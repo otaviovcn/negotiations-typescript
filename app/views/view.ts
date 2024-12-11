@@ -5,7 +5,12 @@ export abstract class View<T> {
 
 
   constructor(selector: string, escape?: boolean) {
-    this.element = document.querySelector(selector);
+    const element = document.querySelector(selector);
+    if (element) {
+      this.element = element as HTMLElement;
+    } else {
+      throw new Error(`O elemento ${selector} não existe no DOM`)
+    }
     if (escape) {
       this.escape = escape;
     }
