@@ -13,7 +13,7 @@ export class NegociacaoController {
   private quantityInput: HTMLInputElement;
   private valueInput: HTMLInputElement;
   private negotiations: Negotiations = new Negotiations();
-  private negotiationsView: NegotiationsView = new NegotiationsView("#negotiationsView", true);
+  private negotiationsView: NegotiationsView = new NegotiationsView("#negotiationsView");
   private messageView: MessageView = new MessageView("#messageView");
 
   constructor() {
@@ -24,7 +24,7 @@ export class NegociacaoController {
   }
 
   @inspect()
-  @logRuntime("")
+  @logRuntime("seconds")
   public adds(): void {
     const negotiation = Negotiation.createsNegotiation(
       this.dateInput.value,
