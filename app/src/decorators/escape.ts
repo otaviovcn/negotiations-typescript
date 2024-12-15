@@ -13,7 +13,6 @@ export function escape() {
 
       if (typeof returnMethod === "string") {
         console.log(`@escape em ação para o método ${propetyKey} da classe ${this.constructor.name}`);
-
         returnMethod = returnMethod.replace(exp, "");
       }
 

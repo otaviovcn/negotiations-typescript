@@ -4,9 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import { domInjector } from "../decorators/dom-injector.js";
 import { inspect } from "../decorators/inspect.js";
 import { logRuntime } from "../decorators/log-runtime.js";
 import { WeekDays } from "../enums/week-days.js";
+import { NegotiationsService } from "../services/nogotiation-service.js";
 import { Negotiation } from "../models/negotiation.js";
 import { Negotiations } from "../models/negotiations.js";
 import { MessageView } from "../views/message-view.js";
@@ -16,9 +18,7 @@ export class NegociacaoController {
         this.negotiations = new Negotiations();
         this.negotiationsView = new NegotiationsView("#negotiationsView");
         this.messageView = new MessageView("#messageView");
-        this.dateInput = document.querySelector('#data');
-        this.quantityInput = document.querySelector('#quantidade');
-        this.valueInput = document.querySelector('#valor');
+        this.negotiationsService = new NegotiationsService();
         this.negotiationsView.update(this.negotiations);
     }
     adds() {
@@ -31,6 +31,15 @@ export class NegociacaoController {
         else {
             this.messageView.update('Apenas negociações em dias úteis são aceitas.');
         }
+    }
+    dataImport() {
+        this.negotiationsService.getDayNegotiations()
+            .then(negotiations => {
+            for (let negotiation of negotiations) {
+                this.negotiations.adds(negotiation);
+            }
+            this.negotiationsView.update(this.negotiations);
+        });
     }
     isBusinessDay(date) {
         return date.getDay() > WeekDays.SUNDAY && date.getDay() < WeekDays.SATURDAY;
@@ -46,6 +55,15 @@ export class NegociacaoController {
         this.messageView.update(`${this.negotiations.list().length}ª Negociação adicionada`);
     }
 }
+__decorate([
+    domInjector('#data')
+], NegociacaoController.prototype, "dateInput", void 0);
+__decorate([
+    domInjector('#quantidade')
+], NegociacaoController.prototype, "quantityInput", void 0);
+__decorate([
+    domInjector('#valor')
+], NegociacaoController.prototype, "valueInput", void 0);
 __decorate([
     inspect(),
     logRuntime("seconds")

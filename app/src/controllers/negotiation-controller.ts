@@ -1,6 +1,9 @@
+import { domInjector } from "../decorators/dom-injector.js";
 import { inspect } from "../decorators/inspect.js";
 import { logRuntime } from "../decorators/log-runtime.js";
 import { WeekDays } from "../enums/week-days.js";
+import { DayNegotiations } from "../interfaces/day-negotiations.js";
+import { NegotiationsService } from "../services/nogotiation-service.js";
 import { Negotiation } from "../models/negotiation.js";
 import { Negotiations } from "../models/negotiations.js";
 import { MessageView } from "../views/message-view.js";
@@ -9,17 +12,19 @@ import { NegotiationsView } from "../views/negotiations-view.js";
 /* Na arquitetura MVC, a camada Controller é responsvel por intermediar
   o acesso entre a View e a Model */
 export class NegociacaoController {
+  @domInjector('#data')
   private dateInput: HTMLInputElement;
+  @domInjector('#quantidade')
   private quantityInput: HTMLInputElement;
+  @domInjector('#valor')
   private valueInput: HTMLInputElement;
+
   private negotiations: Negotiations = new Negotiations();
   private negotiationsView: NegotiationsView = new NegotiationsView("#negotiationsView");
   private messageView: MessageView = new MessageView("#messageView");
+  private negotiationsService: NegotiationsService = new NegotiationsService();
 
   constructor() {
-    this.dateInput = document.querySelector('#data') as HTMLInputElement;
-    this.quantityInput = document.querySelector('#quantidade') as HTMLInputElement;
-    this.valueInput = document.querySelector('#valor') as HTMLInputElement;
     this.negotiationsView.update(this.negotiations);
   }
 
@@ -39,6 +44,16 @@ export class NegociacaoController {
     } else {
       this.messageView.update('Apenas negociações em dias úteis são aceitas.');
     }
+  }
+
+  public dataImport(): void {
+    this.negotiationsService.getDayNegotiations()
+      .then(negotiations => {
+        for(let negotiation of negotiations) {
+          this.negotiations.adds(negotiation);
+        }
+        this.negotiationsView.update(this.negotiations);
+      })
   }
 
   private isBusinessDay(date: Date):boolean {
