@@ -3,7 +3,7 @@ import { inspect } from "../decorators/inspect.js";
 import { logRuntime } from "../decorators/log-runtime.js";
 import { WeekDays } from "../enums/week-days.js";
 import { DayNegotiations } from "../interfaces/day-negotiations.js";
-import { NegotiationsService } from "../services/nogotiation-service.js";
+import { NegotiationsService } from "../services/negotiation-service.js";
 import { Negotiation } from "../models/negotiation.js";
 import { Negotiations } from "../models/negotiations.js";
 import { MessageView } from "../views/message-view.js";
@@ -48,6 +48,13 @@ export class NegociacaoController {
 
   public dataImport(): void {
     this.negotiationsService.getDayNegotiations()
+      .then((negotiations) => {
+        const list = this.negotiations.list();
+        return negotiations.filter(negotiation => {
+          return !this.negotiations.list()
+          .some(negotiationOfList => negotiationOfList.itIsSame(negotiation));
+        })
+      })
       .then(negotiations => {
         for(let negotiation of negotiations) {
           this.negotiations.adds(negotiation);

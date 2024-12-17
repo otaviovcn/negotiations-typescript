@@ -1,4 +1,6 @@
-export class Negotiation {
+import { Model } from "../interfaces/model.js";
+
+export class Negotiation implements Model<Negotiation> {
   constructor(
     private _date: Date,
     readonly quantity: number,
@@ -19,5 +21,21 @@ export class Negotiation {
     const quantity = parseInt(quantityInput);
     const value = parseFloat(valueInput);
     return new Negotiation(date, quantity, value);
+  }
+
+  convertToText(): string {
+    return `
+      data: ${this.date},
+      quantity: ${this.quantity},
+      value: ${this.value}
+    `;
+  }
+
+  public itIsSame(negotiation: Negotiation): boolean {
+    return negotiation.date.getDate() === this.date.getDate()
+        && negotiation.date.getMonth() === this.date.getMonth()
+        && negotiation.date.getFullYear() === this.date.getFullYear()
+        && negotiation.quantity === this.quantity
+        && negotiation.value === this.value;
   }
 }

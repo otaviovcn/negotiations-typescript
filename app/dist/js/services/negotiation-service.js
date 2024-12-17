@@ -13,7 +13,7 @@ export class NegotiationsService {
             });
         });
     }
-    negotiationIsAlreadyOnTheList(negotiation) {
+    negotiationIsAlreadyOnTheList(negotiation, negotiations) {
         return this.negotiations.list()
             .some(negotiationOfList => negotiationOfList.itIsSame(negotiation));
     }

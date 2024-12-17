@@ -17,4 +17,18 @@ export class Negotiation {
         const value = parseFloat(valueInput);
         return new Negotiation(date, quantity, value);
     }
+    convertToText() {
+        return `
+      data: ${this.date},
+      quantity: ${this.quantity},
+      value: ${this.value}
+    `;
+    }
+    itIsSame(negotiation) {
+        return negotiation.date.getDate() === this.date.getDate()
+            && negotiation.date.getMonth() === this.date.getMonth()
+            && negotiation.date.getFullYear() === this.date.getFullYear()
+            && negotiation.quantity === this.quantity
+            && negotiation.value === this.value;
+    }
 }
